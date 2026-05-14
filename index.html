@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>박세훈 - 프로필 (Instagram Style)</title>
+<style>
+  /* CSS Reset 및 변수 설정 (design.md 기반) */
+  :root {
+    --primary-bg: #FFFFFF;
+    --secondary-bg: #FAFAFA;
+    --primary-text: #262626;
+    --secondary-text: #8E8E8E;
+    --action-blue: #0095F6;
+    --border-color: #DBDBDB;
+    --alert-red: #ED4956;
+    --story-gradient: linear-gradient(45deg, #FEDA75, #FA7E1E, #D62976, #962FBF, #4F5BD5);
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--secondary-bg);
+    color: var(--primary-text);
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  /* 왼쪽 사이드바 네비게이션 */
+  .sidebar {
+    width: 244px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: var(--primary-bg);
+    border-right: 1px solid var(--border-color);
+    padding: 20px 12px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-logo {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 40px;
+    padding: 0 12px;
+    font-family: 'Georgia', serif;
+    cursor: pointer;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 16px;
+  }
+
+  .nav-item:hover {
+    background-color: var(--secondary-bg);
+  }
+
+  .nav-item.active {
+    font-weight: 600;
+  }
+
+  .nav-icon {
+    font-size: 24px;
+    margin-right: 16px;
+  }
+
+  /* 메인 콘텐츠 영역 (중앙 정렬, 고정 너비) */
+  .main-content {
+    margin-left: 244px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+  }
+
+  .feed-container {
+    width: 100%;
+    max-width: 470px; /* 메인 피드 영역 너비 제한 */
+    margin-right: 32px;
+  }
+
+  /* 사용자 프로필 헤더 */
+  .profile-header {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 44px;
+    padding: 0 16px;
+  }
+
+  .profile-avatar {
+    width: 77px;
+    height: 77px;
+    border-radius: 50%;
+    background: var(--story-gradient);
+    padding: 3px;
+    margin-right: 28px;
+    flex-shrink: 0;
+  }
+
+  .profile-avatar-inner {
+    width: 100%;
+    height: 100%;
+    background-color: #eee;
+    border-radius: 50%;
+    border: 2px solid var(--primary-bg);
+    box-sizing: border-box;
+  }
+
+  .profile-info {
+    flex: 1;
+  }
+
+  .profile-info h1 {
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .edit-btn {
+    background-color: #EFEFEF;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary-text);
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .edit-btn:hover {
+    background-color: #DBDBDB;
+  }
+
+  .profile-stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  
+  .profile-stats span strong {
+    font-weight: 600;
+  }
+
+  .profile-bio {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .profile-bio .name {
+    font-weight: 600;
+  }
+
+  /* 피드 게시물 카드 */
+  .post-card {
+    background-color: var(--primary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  }
+
+  .post-header {
+    display: flex;
+    align-items: center;
+    padding: 14px;
+  }
+
+  .post-avatar {
+    width: 32px;
+    height: 32px;
+    background: var(--story-gradient);
+    border-radius: 50%;
+    padding: 2px;
+    margin-right: 10px;
+  }
+
+  .post-avatar-inner {
+    width: 100%;
+    height: 100%;
+    background-color: #ccc;
+    border-radius: 50%;
+    border: 1px solid var(--primary-bg);
+    box-sizing: border-box;
+  }
+
+  .post-username {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .post-more {
+    margin-left: auto;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 2px;
+  }
+
+  /* 임시 이미지 영역 (그라데이션 및 텍스트) */
+  .post-image {
+    width: 100%;
+    height: 470px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+
+  .post-actions {
+    padding: 14px;
+    display: flex;
+    font-size: 24px;
+    gap: 16px;
+    cursor: pointer;
+  }
+  
+  .post-actions .save-icon {
+    margin-left: auto;
+  }
+
+  .post-likes {
+    padding: 0 14px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .post-caption {
+    padding: 0 14px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .post-caption .username {
+    font-weight: 600;
+    margin-right: 5px;
+  }
+
+  .post-caption ul {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+  }
+
+  .post-caption li {
+    margin-bottom: 4px;
+  }
+
+  .post-time {
+    padding: 0 14px;
+    font-size: 12px;
+    color: var(--secondary-text);
+    margin-top: 8px;
+    text-transform: uppercase;
+  }
+
+  /* 반응형 처리 (모바일) */
+  @media (max-width: 768px) {
+    .sidebar {
+      display: none; /* 모바일에서는 하단 탭바로 변경하는 것이 일반적이나 단순화를 위해 숨김 처리 */
+    }
+    .main-content {
+      margin-left: 0;
+      padding-top: 10px;
+    }
+    .feed-container {
+      margin-right: 0;
+      max-width: 100%;
+    }
+    .post-card {
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+    }
+    .profile-header {
+      padding: 0 16px;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <!-- 좌측 사이드바 -->
+  <div class="sidebar">
+    <div class="sidebar-logo">ProfileGram</div>
+    <div class="nav-item active">
+      <span class="nav-icon">🏠</span>
+      <span>홈</span>
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">🔍</span>
+      <span>검색</span>
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">🧭</span>
+      <span>탐색 탭</span>
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">❤️</span>
+      <span>알림</span>
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">➕</span>
+      <span>만들기</span>
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>프로필</span>
+    </div>
+  </div>
+
+  <!-- 메인 피드 영역 -->
+  <div class="main-content">
+    <div class="feed-container">
+      
+      <!-- 프로필 헤더 영역 -->
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <!-- picsum.photos를 사용하여 임시 프로필 이미지 삽입 -->
+          <div class="profile-avatar-inner" style="background: url('https://picsum.photos/seed/profile/150/150') center/cover;"></div>
+        </div>
+        <div class="profile-info">
+          <h1>
+            <span>edu_sehun_1986</span>
+            <button class="edit-btn">프로필 편집</button>
+          </h1>
+          <div class="profile-stats">
+            <span>게시물 <strong>4</strong></span>
+            <span>팔로워 <strong>186</strong></span>
+            <span>팔로우 <strong>10</strong></span>
+          </div>
+          <div class="profile-bio">
+            <span class="name">박세훈 | 교육자</span><br>
+            교육적 탐구와 체계적인 삶을 지향하는 교육 전문가입니다. 🌱<br>
+            성장을 위한 탐구와 신체적·경제적 자립을 실현하기 위해 루틴을 지킵니다.<br>
+            📍 South Korea | 🎂 1986. 10. 31<br>
+            🔗 <a href="#" style="color: var(--action-blue); text-decoration: none; font-weight: 600;">linktr.ee/edu_sehun</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 포스트 1: 교육적 전문성 -->
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-avatar">
+            <div class="post-avatar-inner" style="background: url('https://picsum.photos/seed/profile/150/150') center/cover;"></div>
+          </div>
+          <div class="post-username">edu_sehun_1986</div>
+          <div class="post-more">...</div>
+        </div>
+        <div class="post-image" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);">
+          📚 Professional Focus
+        </div>
+        <div class="post-actions">
+          <span>♡</span><span>💬</span><span>↗️</span>
+          <span class="save-icon">🔖</span>
+        </div>
+        <div class="post-likes">
+          <strong>교육자님</strong> 외 <strong>여러 명</strong>이 좋아합니다
+        </div>
+        <div class="post-caption">
+          <span class="username">edu_sehun_1986</span>
+          <strong>교육적 전문성</strong><br>
+          <ul>
+            <li><strong>개념 기반 탐구 수업(Concept-Based Inquiry):</strong> 학습자가 지식을 넘어 전이 가능한 이해에 도달할 수 있도록 돕는 교육 설계에 집중합니다.</li>
+            <li><strong>교육과정 디자인:</strong> 단순한 지식 전달을 넘어, 체계적인 프레임워크를 통해 교육과정을 재구성하고 실천하는 데 강점이 있습니다.</li>
+            <li><strong>지식의 체계화:</strong> 독서를 통해 얻은 통찰을 기록하고 실무에 적용하는 프로세스를 중요하게 생각합니다.</li>
+          </ul>
+        </div>
+        <div class="post-time">1시간 전</div>
+      </div>
+
+      <!-- 포스트 2: 자기관리 및 루틴 -->
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-avatar">
+            <div class="post-avatar-inner" style="background: url('https://picsum.photos/seed/profile/150/150') center/cover;"></div>
+          </div>
+          <div class="post-username">edu_sehun_1986</div>
+          <div class="post-more">...</div>
+        </div>
+        <div class="post-image" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">
+          🏃‍♂️ Lifestyle & Discipline
+        </div>
+        <div class="post-actions">
+          <span>♡</span><span>💬</span><span>↗️</span>
+          <span class="save-icon">🔖</span>
+        </div>
+        <div class="post-likes">
+          <strong>건강맨님</strong> 외 <strong>여러 명</strong>이 좋아합니다
+        </div>
+        <div class="post-caption">
+          <span class="username">edu_sehun_1986</span>
+          <strong>자기관리 및 루틴</strong><br>
+          <ul>
+            <li><strong>지속 가능한 신체 관리:</strong> 172cm, 70kg의 건강한 체격을 유지하며, 근력 향상과 체성분 개선을 위해 매일 노력합니다.</li>
+            <li><strong>일일 운동 루틴:</strong> 매일 10,000보 이상의 활동량 유지 / 맨몸 운동(푸쉬업, 스쿼트 각 30회 3세트) / 유산소 운동(스테퍼 20분)</li>
+            <li><strong>규칙적인 생활:</strong> 학교 현장에서의 역동적인 활동과 개인적인 수련 사이의 균형을 맞추는 절제된 삶을 지향합니다.</li>
+          </ul>
+        </div>
+        <div class="post-time">4시간 전</div>
+      </div>
+
+      <!-- 포스트 3: 가치관 및 철학 -->
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-avatar">
+            <div class="post-avatar-inner" style="background: url('https://picsum.photos/seed/profile/150/150') center/cover;"></div>
+          </div>
+          <div class="post-username">edu_sehun_1986</div>
+          <div class="post-more">...</div>
+        </div>
+        <div class="post-image" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
+          💡 Values & Philosophy
+        </div>
+        <div class="post-actions">
+          <span>♡</span><span>💬</span><span>↗️</span>
+          <span class="save-icon">🔖</span>
+        </div>
+        <div class="post-likes">
+          <strong>투자자님</strong> 외 <strong>여러 명</strong>이 좋아합니다
+        </div>
+        <div class="post-caption">
+          <span class="username">edu_sehun_1986</span>
+          <strong>가치관 및 철학</strong><br>
+          <ul>
+            <li><strong>체계적인 자산 관리:</strong> 저위험·고효율의 ETF 투자와 꾸준한 저축을 통해 장기적인 경제적 자유를 설계합니다.</li>
+            <li><strong>미래를 위한 준비:</strong> 자신뿐만 아니라 소중한 사람들에게 안정감과 자유를 줄 수 있는 든든한 기반을 만드는 것을 삶의 주요 동력으로 삼습니다.</li>
+            <li><strong>기록의 힘:</strong> 일상의 데이터와 학습 내용을 디지털 도구(Google Sheets 등)로 관리하며 삶의 가시성을 높입니다.</li>
+          </ul>
+        </div>
+        <div class="post-time">1일 전</div>
+      </div>
+      
+      <!-- 포스트 4: 관심사 -->
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-avatar">
+            <div class="post-avatar-inner" style="background: url('https://picsum.photos/seed/profile/150/150') center/cover;"></div>
+          </div>
+          <div class="post-username">edu_sehun_1986</div>
+          <div class="post-more">...</div>
+        </div>
+        <div class="post-image" style="background: linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%);">
+          🔍 Interests
+        </div>
+        <div class="post-actions">
+          <span>♡</span><span>💬</span><span>↗️</span>
+          <span class="save-icon">🔖</span>
+        </div>
+        <div class="post-likes">
+          <strong>독서광님</strong> 외 <strong>여러 명</strong>이 좋아합니다
+        </div>
+        <div class="post-caption">
+          <span class="username">edu_sehun_1986</span>
+          <strong>관심사</strong><br>
+          <ul>
+            <li><strong>중고 서점 탐방:</strong> 알라딘 등 중고 서점에서 지혜가 담긴 책을 발견하고 수집하는 것을 즐깁니다.</li>
+            <li><strong>교육 공학 및 도구:</strong> 생산성을 높여주는 디지털 도구 활용과 이를 교육 현장에 접목하는 방법에 관심이 많습니다.</li>
+            <li><strong>경제적 생존 전략:</strong> 변화하는 시장 상황 속에서 흔들리지 않는 개인의 금융 시스템 구축을 연구합니다.</li>
+          </ul>
+        </div>
+        <div class="post-time">2일 전</div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
